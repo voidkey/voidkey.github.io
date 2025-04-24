@@ -23,7 +23,7 @@
 &lt;li&gt;与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;rag-流程图&#34;&gt;RAG 流程图&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;![RAG flow chart](/images/my_image.jpg)
+&lt;pre&gt;&lt;code&gt;![RAG flow chart](/images/rag.png)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id=&#34;文本分块-text-split&#34;&gt;文本分块 Text Split&lt;/h3&gt;
 &lt;p&gt;将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果&lt;/p&gt;
