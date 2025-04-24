@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>RAG | NULLKEY</title>
+<meta name="keywords" content="">
+<meta name="description" content="幻觉 Hallucination
+AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
+检索增强生成 RAG
+RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：
+
+减少幻觉
+提供当前时间的信息与特定领域的信息
+与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比
+
+RAG 流程图
+![RAG flow chart](/images/my_image.jpg)
+
+文本分块 Text Split
+将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
+嵌入模型 Embedding Model
+一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large
+向量嵌入 Vector Embedding
+是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象
+向量数据库 Vector Database
+存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等
+向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型
+检索 Retrieve
+本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居
+最常用的度量指标：
+
+
+欧氏距离（Euclidean Distance）两点之间的直线距离
+
+
+余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据
+
+
+点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积
+
+
+找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段
+提示词模版
+将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户
+这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本
+如何找到最近邻
+暴力搜索 Brute force search
+穷举所有数据点
+近似最近邻算法 ANN (Approximate Nearest Neighbor search)
+核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索">
+<meta name="author" content="nullkey">
+<link rel="canonical" href="http://localhost:1313/posts/rag/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f49d66caae9ea0fd43f21f29e71a8d3e284517ed770f2aa86fa012953ad3c9ef.css" integrity="sha256-9J1myq6eoP1D8h8p5xqNPihFF&#43;13Dyqob6ASlTrTye8=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/images/logo.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/images/logo.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/images/logo.jpg">
+<link rel="apple-touch-icon" href="http://localhost:1313/images/logo.jpg">
+<link rel="mask-icon" href="http://localhost:1313/images/logo.jpg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/rag/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="NULLKEY (Alt + H)">NULLKEY</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      RAG
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-meta"><span title='2025-04-24 22:47:48 +0800 CST'>2025-04-24</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;nullkey&nbsp;|&nbsp;<a href="https://github.com/voidkey/voidkey.github.io/blob/main/content/posts/rag.md" rel="noopener noreferrer" target="_blank">提交修改建议</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%b9%bb%e8%a7%89-hallucination" aria-label="幻觉 Hallucination">幻觉 Hallucination</a></li>
+                <li>
+                    <a href="#%e6%a3%80%e7%b4%a2%e5%a2%9e%e5%bc%ba%e7%94%9f%e6%88%90-rag" aria-label="检索增强生成 RAG">检索增强生成 RAG</a></li>
+                <li>
+                    <a href="#rag-%e6%b5%81%e7%a8%8b%e5%9b%be" aria-label="RAG 流程图">RAG 流程图</a><ul>
+                        
+                <li>
+                    <a href="#%e6%96%87%e6%9c%ac%e5%88%86%e5%9d%97-text-split" aria-label="文本分块 Text Split">文本分块 Text Split</a></li>
+                <li>
+                    <a href="#%e5%b5%8c%e5%85%a5%e6%a8%a1%e5%9e%8b-embedding-model" aria-label="嵌入模型 Embedding Model">嵌入模型 Embedding Model</a></li>
+                <li>
+                    <a href="#%e5%90%91%e9%87%8f%e5%b5%8c%e5%85%a5-vector-embedding" aria-label="向量嵌入 Vector Embedding">向量嵌入 Vector Embedding</a></li>
+                <li>
+                    <a href="#%e5%90%91%e9%87%8f%e6%95%b0%e6%8d%ae%e5%ba%93-vector-database" aria-label="向量数据库 Vector Database">向量数据库 Vector Database</a></li>
+                <li>
+                    <a href="#%e6%a3%80%e7%b4%a2-retrieve" aria-label="检索 Retrieve">检索 Retrieve</a></li>
+                <li>
+                    <a href="#%e6%8f%90%e7%a4%ba%e8%af%8d%e6%a8%a1%e7%89%88" aria-label="提示词模版">提示词模版</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%a6%82%e4%bd%95%e6%89%be%e5%88%b0%e6%9c%80%e8%bf%91%e9%82%bb" aria-label="如何找到最近邻">如何找到最近邻</a><ul>
+                        
+                <li>
+                    <a href="#%e6%9a%b4%e5%8a%9b%e6%90%9c%e7%b4%a2-brute-force-search" aria-label="暴力搜索 Brute force search">暴力搜索 Brute force search</a></li>
+                <li>
+                    <a href="#%e8%bf%91%e4%bc%bc%e6%9c%80%e8%bf%91%e9%82%bb%e7%ae%97%e6%b3%95-ann-approximate-nearest-neighbor-search" aria-label="近似最近邻算法 ANN (Approximate Nearest Neighbor search)">近似最近邻算法 ANN (Approximate Nearest Neighbor search)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#reference" aria-label="Reference:">Reference:</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="幻觉-hallucination">幻觉 Hallucination<a hidden class="anchor" aria-hidden="true" href="#幻觉-hallucination">#</a></h2>
+<p>AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。</p>
+<h2 id="检索增强生成-rag">检索增强生成 RAG<a hidden class="anchor" aria-hidden="true" href="#检索增强生成-rag">#</a></h2>
+<p>RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：</p>
+<ul>
+<li>减少幻觉</li>
+<li>提供当前时间的信息与特定领域的信息</li>
+<li>与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比</li>
+</ul>
+<h2 id="rag-流程图">RAG 流程图<a hidden class="anchor" aria-hidden="true" href="#rag-流程图">#</a></h2>
+<pre><code>![RAG flow chart](/images/my_image.jpg)
+</code></pre>
+<h3 id="文本分块-text-split">文本分块 Text Split<a hidden class="anchor" aria-hidden="true" href="#文本分块-text-split">#</a></h3>
+<p>将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果</p>
+<h3 id="嵌入模型-embedding-model">嵌入模型 Embedding Model<a hidden class="anchor" aria-hidden="true" href="#嵌入模型-embedding-model">#</a></h3>
+<p>一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large</p>
+<h3 id="向量嵌入-vector-embedding">向量嵌入 Vector Embedding<a hidden class="anchor" aria-hidden="true" href="#向量嵌入-vector-embedding">#</a></h3>
+<p>是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象</p>
+<h3 id="向量数据库-vector-database">向量数据库 Vector Database<a hidden class="anchor" aria-hidden="true" href="#向量数据库-vector-database">#</a></h3>
+<p>存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等</p>
+<p>向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型</p>
+<h3 id="检索-retrieve">检索 Retrieve<a hidden class="anchor" aria-hidden="true" href="#检索-retrieve">#</a></h3>
+<p>本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居</p>
+<p>最常用的度量指标：</p>
+<ul>
+<li>
+<p>欧氏距离（Euclidean Distance）两点之间的直线距离</p>
+</li>
+<li>
+<p>余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据</p>
+</li>
+<li>
+<p>点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积</p>
+</li>
+</ul>
+<p>找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段</p>
+<h3 id="提示词模版">提示词模版<a hidden class="anchor" aria-hidden="true" href="#提示词模版">#</a></h3>
+<p>将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户</p>
+<p>这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本</p>
+<h2 id="如何找到最近邻">如何找到最近邻<a hidden class="anchor" aria-hidden="true" href="#如何找到最近邻">#</a></h2>
+<h3 id="暴力搜索-brute-force-search">暴力搜索 Brute force search<a hidden class="anchor" aria-hidden="true" href="#暴力搜索-brute-force-search">#</a></h3>
+<p>穷举所有数据点</p>
+<h3 id="近似最近邻算法-ann-approximate-nearest-neighbor-search">近似最近邻算法 ANN (Approximate Nearest Neighbor search)<a hidden class="anchor" aria-hidden="true" href="#近似最近邻算法-ann-approximate-nearest-neighbor-search">#</a></h3>
+<p>核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索</p>
+<p><strong>向量索引（Vector Indexing）</strong> 预先计算Vector Embedding之间的相似度，并将相似的向量组织在一起的过程</p>
+<p>多种技术路线：</p>
+<p>Data Structure</p>
+<ul>
+<li>
+<p>Hash-based index : LSH</p>
+</li>
+<li>
+<p>Tree-based index : ANNOY</p>
+</li>
+<li>
+<p>Cluster-based index : HNSW</p>
+</li>
+<li>
+<p>Graph-based index : IVF</p>
+</li>
+</ul>
+<p>Compression</p>
+<ul>
+<li>Vector Quantization: 标量量化 SQ / 乘积量化 PQ</li>
+</ul>
+<p>当前最流行的算法：层次化可导航小世界 HNSW (Hierarchical Navigable Small World)</p>
+<p>基于图结构的算法，高层级的图由较少的节点组成，可实现快速大范围跳跃，缩小搜索空间，最底层包括所有数据点，搜索过程从顶层开始，直到在最底层找到最近邻点</p>
+<p>选择ANN算法时，通常会面临不可能三角：速度、准确性、内存，要做权衡（trade-off）</p>
+<h2 id="reference">Reference:<a hidden class="anchor" aria-hidden="true" href="#reference">#</a></h2>
+<p><a href="https://www.bilibili.com/video/BV11zf6YyEnT/?share_source=copy_web&amp;vd_source=455b7b6ca525cd39eefd45df780028d2">https://www.bilibili.com/video/BV11zf6YyEnT/?share_source=copy_web&amp;vd_source=455b7b6ca525cd39eefd45df780028d2</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/personal_blog_note/">
+    <span class="title">Next »</span>
+    <br>
+    <span>个人博客搭建笔记</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">NULLKEY</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
