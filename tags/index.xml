@@ -6,8 +6,36 @@
     <description>Recent content in Tags on NULLKEY</description>
     <generator>Hugo -- 0.146.6</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Apr 2025 15:44:19 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 24 Apr 2025 22:47:48 +0800</lastBuildDate>
     <atom:link href="https://blog.nullkey.top/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI</title>
+      <link>https://blog.nullkey.top/tags/ai/</link>
+      <pubDate>Thu, 24 Apr 2025 22:47:48 +0800</pubDate>
+      <guid>https://blog.nullkey.top/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ANN</title>
+      <link>https://blog.nullkey.top/tags/ann/</link>
+      <pubDate>Thu, 24 Apr 2025 22:47:48 +0800</pubDate>
+      <guid>https://blog.nullkey.top/tags/ann/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RAG</title>
+      <link>https://blog.nullkey.top/tags/rag/</link>
+      <pubDate>Thu, 24 Apr 2025 22:47:48 +0800</pubDate>
+      <guid>https://blog.nullkey.top/tags/rag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vector Database</title>
+      <link>https://blog.nullkey.top/tags/vector-database/</link>
+      <pubDate>Thu, 24 Apr 2025 22:47:48 +0800</pubDate>
+      <guid>https://blog.nullkey.top/tags/vector-database/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Blog</title>
       <link>https://blog.nullkey.top/tags/blog/</link>

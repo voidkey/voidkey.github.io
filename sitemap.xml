@@ -2,10 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://blog.nullkey.top/categories/ai/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/tags/ai/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/tags/ann/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/categories/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
     <loc>https://blog.nullkey.top/</loc>
     <lastmod>2025-04-24T22:47:48+08:00</lastmod>
   </url><url>
     <loc>https://blog.nullkey.top/posts/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/posts/rag/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/tags/rag/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/tags/</loc>
+    <lastmod>2025-04-24T22:47:48+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.nullkey.top/tags/vector-database/</loc>
     <lastmod>2025-04-24T22:47:48+08:00</lastmod>
   </url><url>
     <loc>https://blog.nullkey.top/tags/blog/</loc>
@@ -17,9 +41,6 @@
     <loc>https://blog.nullkey.top/tags/personal/</loc>
     <lastmod>2025-04-22T15:44:19+08:00</lastmod>
   </url><url>
-    <loc>https://blog.nullkey.top/tags/</loc>
-    <lastmod>2025-04-22T15:44:19+08:00</lastmod>
-  </url><url>
     <loc>https://blog.nullkey.top/tags/web-development/</loc>
     <lastmod>2025-04-22T15:44:19+08:00</lastmod>
   </url><url>
@@ -27,8 +48,6 @@
     <lastmod>2025-04-22T15:44:19+08:00</lastmod>
   </url><url>
     <loc>https://blog.nullkey.top/archives/</loc>
-  </url><url>
-    <loc>https://blog.nullkey.top/categories/</loc>
   </url><url>
     <loc>https://blog.nullkey.top/search/</loc>
   </url>

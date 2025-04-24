@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>NULLKEY</title>
-    <link>https://blog.nullkey.top/</link>
-    <description>Recent content on NULLKEY</description>
+    <title>RAG on NULLKEY</title>
+    <link>https://blog.nullkey.top/tags/rag/</link>
+    <description>Recent content in RAG on NULLKEY</description>
     <generator>Hugo -- 0.146.6</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 24 Apr 2025 22:47:48 +0800</lastBuildDate>
-    <atom:link href="https://blog.nullkey.top/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.nullkey.top/tags/rag/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>RAG</title>
       <link>https://blog.nullkey.top/posts/rag/</link>
@@ -57,53 +57,6 @@
 &lt;p&gt;穷举所有数据点&lt;/p&gt;
 &lt;h3 id=&#34;近似最近邻算法-ann-approximate-nearest-neighbor-search&#34;&gt;近似最近邻算法 ANN (Approximate Nearest Neighbor search)&lt;/h3&gt;
 &lt;p&gt;核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>个人博客搭建笔记</title>
-      <link>https://blog.nullkey.top/posts/personal_blog_note/</link>
-      <pubDate>Tue, 22 Apr 2025 15:44:19 +0800</pubDate>
-      <guid>https://blog.nullkey.top/posts/personal_blog_note/</guid>
-      <description>&lt;h1 id=&#34;0-前言&#34;&gt;0. 前言&lt;/h1&gt;
-&lt;p&gt;一直有个域名，平时只是用于作为伪装域名，于是尝试搭建个人博客,实现思路是使用 Hugo + Github Pages。&lt;/p&gt;
-&lt;p&gt;目前有三个主流的静态博客生成器Jekyll、Hexo 和 Hugo&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1. Jekyll
-
-- Jekyll 是最早流行的静态博客生成器之一，广泛用于 GitHub Pages，GitHub Pages 官方支持
-- Jekyll 是用 Ruby 编写的，需要安装 Ruby 环境来运行。
-
-2. Hexo
-
-- Hexo 使用 Node.js 进行构建，速度较快，插件丰富。
-
-3. Hugo
-
-- Hugo 是用 Go 语言编写的，是目前速度最快的静态博客生成器，尤其适合有大量内容的网站。
-- 支持多语言、分类、标签等高级功能，适合需要组织大量内容的用户。
-- Hugo 的配置文件和结构非常简洁，易于上手。
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;我本身就是写Go的，遂选择了Hugo&lt;/p&gt;
-&lt;h1 id=&#34;1-准备工作&#34;&gt;1. 准备工作&lt;/h1&gt;
-&lt;h2 id=&#34;11-域名配置&#34;&gt;1.1 域名配置&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;DNS 设置&lt;/strong&gt;：在域名服务商处设置了以下 DNS 记录：
-&lt;ul&gt;
-&lt;li&gt;CNAME 记录指向 &lt;code&gt;xxx.github.io&lt;/code&gt;。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;需要注意要在Github的Setting里设置Pages的CNAME&lt;/p&gt;
-&lt;h2 id=&#34;12-hugo-安装与配置&#34;&gt;1.2 Hugo 安装与配置&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;安装 Hugo&lt;/strong&gt;：在本地机器上通过 Homebrew 安装了 Hugo：
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;brew install hugo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;2-配置博客&#34;&gt;2. 配置博客&lt;/h1&gt;
-&lt;h2 id=&#34;21-创建一个-hugo-网站&#34;&gt;2.1 创建一个 Hugo 网站&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hugo new site myblog
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd myblog
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;22-选择并安装主题&#34;&gt;2.2 选择并安装主题&lt;/h2&gt;
-&lt;p&gt;我选择了简洁风格的PaperMod主题&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

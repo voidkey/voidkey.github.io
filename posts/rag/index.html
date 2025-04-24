@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>RAG | NULLKEY</title>
-<meta name="keywords" content="">
+<meta name="keywords" content="AI, RAG, Vector Database, ANN">
 <meta name="description" content="幻觉 Hallucination
 AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
 检索增强生成 RAG
@@ -52,16 +52,16 @@ RAG 流程图
 近似最近邻算法 ANN (Approximate Nearest Neighbor search)
 核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索">
 <meta name="author" content="nullkey">
-<link rel="canonical" href="http://localhost:1313/posts/rag/">
+<link rel="canonical" href="https://blog.nullkey.top/posts/rag/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.f49d66caae9ea0fd43f21f29e71a8d3e284517ed770f2aa86fa012953ad3c9ef.css" integrity="sha256-9J1myq6eoP1D8h8p5xqNPihFF&#43;13Dyqob6ASlTrTye8=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/images/logo.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/images/logo.jpg">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/images/logo.jpg">
-<link rel="apple-touch-icon" href="http://localhost:1313/images/logo.jpg">
-<link rel="mask-icon" href="http://localhost:1313/images/logo.jpg">
+<link rel="icon" href="https://blog.nullkey.top/images/logo.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.nullkey.top/images/logo.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.nullkey.top/images/logo.jpg">
+<link rel="apple-touch-icon" href="https://blog.nullkey.top/images/logo.jpg">
+<link rel="mask-icon" href="https://blog.nullkey.top/images/logo.jpg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/rag/">
+<link rel="alternate" hreflang="en" href="https://blog.nullkey.top/posts/rag/">
 <noscript>
     <style>
         #theme-toggle,
@@ -98,7 +98,136 @@ RAG 流程图
         }
 
     </style>
-</noscript>
+</noscript><meta property="og:url" content="https://blog.nullkey.top/posts/rag/">
+  <meta property="og:site_name" content="NULLKEY">
+  <meta property="og:title" content="RAG">
+  <meta property="og:description" content="幻觉 Hallucination AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
+检索增强生成 RAG RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：
+减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 ![RAG flow chart](/images/my_image.jpg) 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
+嵌入模型 Embedding Model 一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large
+向量嵌入 Vector Embedding 是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象
+向量数据库 Vector Database 存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等
+向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型
+检索 Retrieve 本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居
+最常用的度量指标：
+欧氏距离（Euclidean Distance）两点之间的直线距离
+余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据
+点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积
+找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段
+提示词模版 将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户
+这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本
+如何找到最近邻 暴力搜索 Brute force search 穷举所有数据点
+近似最近邻算法 ANN (Approximate Nearest Neighbor search) 核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-24T22:47:48+08:00">
+    <meta property="article:modified_time" content="2025-04-24T22:47:48+08:00">
+    <meta property="article:tag" content="AI">
+    <meta property="article:tag" content="RAG">
+    <meta property="article:tag" content="Vector Database">
+    <meta property="article:tag" content="ANN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RAG">
+<meta name="twitter:description" content="幻觉 Hallucination
+AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
+检索增强生成 RAG
+RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：
+
+减少幻觉
+提供当前时间的信息与特定领域的信息
+与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比
+
+RAG 流程图
+![RAG flow chart](/images/my_image.jpg)
+
+文本分块 Text Split
+将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
+嵌入模型 Embedding Model
+一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large
+向量嵌入 Vector Embedding
+是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象
+向量数据库 Vector Database
+存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等
+向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型
+检索 Retrieve
+本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居
+最常用的度量指标：
+
+
+欧氏距离（Euclidean Distance）两点之间的直线距离
+
+
+余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据
+
+
+点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积
+
+
+找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段
+提示词模版
+将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户
+这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本
+如何找到最近邻
+暴力搜索 Brute force search
+穷举所有数据点
+近似最近邻算法 ANN (Approximate Nearest Neighbor search)
+核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://blog.nullkey.top/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "RAG",
+      "item": "https://blog.nullkey.top/posts/rag/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "RAG",
+  "name": "RAG",
+  "description": "幻觉 Hallucination AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。\n检索增强生成 RAG RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：\n减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 ![RAG flow chart](/images/my_image.jpg) 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果\n嵌入模型 Embedding Model 一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large\n向量嵌入 Vector Embedding 是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象\n向量数据库 Vector Database 存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等\n向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型\n检索 Retrieve 本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居\n最常用的度量指标：\n欧氏距离（Euclidean Distance）两点之间的直线距离\n余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据\n点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积\n找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段\n提示词模版 将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户\n这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本\n如何找到最近邻 暴力搜索 Brute force search 穷举所有数据点\n近似最近邻算法 ANN (Approximate Nearest Neighbor search) 核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索\n",
+  "keywords": [
+    "AI", "RAG", "Vector Database", "ANN"
+  ],
+  "articleBody": "幻觉 Hallucination AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。\n检索增强生成 RAG RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：\n减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 ![RAG flow chart](/images/my_image.jpg) 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果\n嵌入模型 Embedding Model 一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large\n向量嵌入 Vector Embedding 是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象\n向量数据库 Vector Database 存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等\n向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型\n检索 Retrieve 本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居\n最常用的度量指标：\n欧氏距离（Euclidean Distance）两点之间的直线距离\n余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据\n点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积\n找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段\n提示词模版 将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户\n这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本\n如何找到最近邻 暴力搜索 Brute force search 穷举所有数据点\n近似最近邻算法 ANN (Approximate Nearest Neighbor search) 核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索\n向量索引（Vector Indexing） 预先计算Vector Embedding之间的相似度，并将相似的向量组织在一起的过程\n多种技术路线：\nData Structure\nHash-based index : LSH\nTree-based index : ANNOY\nCluster-based index : HNSW\nGraph-based index : IVF\nCompression\nVector Quantization: 标量量化 SQ / 乘积量化 PQ 当前最流行的算法：层次化可导航小世界 HNSW (Hierarchical Navigable Small World)\n基于图结构的算法，高层级的图由较少的节点组成，可实现快速大范围跳跃，缩小搜索空间，最底层包括所有数据点，搜索过程从顶层开始，直到在最底层找到最近邻点\n选择ANN算法时，通常会面临不可能三角：速度、准确性、内存，要做权衡（trade-off）\nReference: https://www.bilibili.com/video/BV11zf6YyEnT/?share_source=copy_web\u0026vd_source=455b7b6ca525cd39eefd45df780028d2\n",
+  "wordCount" : "116",
+  "inLanguage": "en",
+  "datePublished": "2025-04-24T22:47:48+08:00",
+  "dateModified": "2025-04-24T22:47:48+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "nullkey"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.nullkey.top/posts/rag/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "NULLKEY",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.nullkey.top/images/logo.jpg"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -116,7 +245,7 @@ RAG 流程图
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="NULLKEY (Alt + H)">NULLKEY</a>
+            <a href="https://blog.nullkey.top/" accesskey="h" title="NULLKEY (Alt + H)">NULLKEY</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -142,22 +271,22 @@ RAG 流程图
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/archives/" title="Archives">
+                <a href="https://blog.nullkey.top/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://blog.nullkey.top/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://blog.nullkey.top/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://blog.nullkey.top/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -168,15 +297,9 @@ RAG 流程图
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://blog.nullkey.top/">Home</a>&nbsp;»&nbsp;<a href="https://blog.nullkey.top/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       RAG
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
     </h1>
     <div class="post-meta"><span title='2025-04-24 22:47:48 +0800 CST'>2025-04-24</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;nullkey&nbsp;|&nbsp;<a href="https://github.com/voidkey/voidkey.github.io/blob/main/content/posts/rag.md" rel="noopener noreferrer" target="_blank">提交修改建议</a>
 
@@ -300,9 +423,13 @@ RAG 流程图
 
   <footer class="post-footer">
     <ul class="post-tags">
+      <li><a href="https://blog.nullkey.top/tags/ai/">AI</a></li>
+      <li><a href="https://blog.nullkey.top/tags/rag/">RAG</a></li>
+      <li><a href="https://blog.nullkey.top/tags/vector-database/">Vector Database</a></li>
+      <li><a href="https://blog.nullkey.top/tags/ann/">ANN</a></li>
     </ul>
 <nav class="paginav">
-  <a class="next" href="http://localhost:1313/posts/personal_blog_note/">
+  <a class="next" href="https://blog.nullkey.top/posts/personal_blog_note/">
     <span class="title">Next »</span>
     <br>
     <span>个人博客搭建笔记</span>
@@ -314,7 +441,7 @@ RAG 流程图
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/">NULLKEY</a></span> · 
+        <span>&copy; 2025 <a href="https://blog.nullkey.top/">NULLKEY</a></span> · 
 
     <span>
         Powered by

@@ -6,8 +6,58 @@
     <description>Recent content in Posts on NULLKEY</description>
     <generator>Hugo -- 0.146.6</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Apr 2025 15:44:19 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 24 Apr 2025 22:47:48 +0800</lastBuildDate>
     <atom:link href="https://blog.nullkey.top/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RAG</title>
+      <link>https://blog.nullkey.top/posts/rag/</link>
+      <pubDate>Thu, 24 Apr 2025 22:47:48 +0800</pubDate>
+      <guid>https://blog.nullkey.top/posts/rag/</guid>
+      <description>&lt;h2 id=&#34;幻觉-hallucination&#34;&gt;幻觉 Hallucination&lt;/h2&gt;
+&lt;p&gt;AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。&lt;/p&gt;
+&lt;h2 id=&#34;检索增强生成-rag&#34;&gt;检索增强生成 RAG&lt;/h2&gt;
+&lt;p&gt;RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;减少幻觉&lt;/li&gt;
+&lt;li&gt;提供当前时间的信息与特定领域的信息&lt;/li&gt;
+&lt;li&gt;与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rag-流程图&#34;&gt;RAG 流程图&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;![RAG flow chart](/images/my_image.jpg)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;文本分块-text-split&#34;&gt;文本分块 Text Split&lt;/h3&gt;
+&lt;p&gt;将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果&lt;/p&gt;
+&lt;h3 id=&#34;嵌入模型-embedding-model&#34;&gt;嵌入模型 Embedding Model&lt;/h3&gt;
+&lt;p&gt;一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large&lt;/p&gt;
+&lt;h3 id=&#34;向量嵌入-vector-embedding&#34;&gt;向量嵌入 Vector Embedding&lt;/h3&gt;
+&lt;p&gt;是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象&lt;/p&gt;
+&lt;h3 id=&#34;向量数据库-vector-database&#34;&gt;向量数据库 Vector Database&lt;/h3&gt;
+&lt;p&gt;存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等&lt;/p&gt;
+&lt;p&gt;向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型&lt;/p&gt;
+&lt;h3 id=&#34;检索-retrieve&#34;&gt;检索 Retrieve&lt;/h3&gt;
+&lt;p&gt;本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居&lt;/p&gt;
+&lt;p&gt;最常用的度量指标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;欧氏距离（Euclidean Distance）两点之间的直线距离&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段&lt;/p&gt;
+&lt;h3 id=&#34;提示词模版&#34;&gt;提示词模版&lt;/h3&gt;
+&lt;p&gt;将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户&lt;/p&gt;
+&lt;p&gt;这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本&lt;/p&gt;
+&lt;h2 id=&#34;如何找到最近邻&#34;&gt;如何找到最近邻&lt;/h2&gt;
+&lt;h3 id=&#34;暴力搜索-brute-force-search&#34;&gt;暴力搜索 Brute force search&lt;/h3&gt;
+&lt;p&gt;穷举所有数据点&lt;/p&gt;
+&lt;h3 id=&#34;近似最近邻算法-ann-approximate-nearest-neighbor-search&#34;&gt;近似最近邻算法 ANN (Approximate Nearest Neighbor search)&lt;/h3&gt;
+&lt;p&gt;核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索&lt;/p&gt;</description>
+    </item>
     <item>
       <title>个人博客搭建笔记</title>
       <link>https://blog.nullkey.top/posts/personal_blog_note/</link>

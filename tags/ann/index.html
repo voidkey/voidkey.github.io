@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Tags | NULLKEY</title>
+<title>ANN | NULLKEY</title>
 <meta name="keywords" content="">
 <meta name="description" content="nullkey&#39;s blog">
 <meta name="author" content="nullkey">
-<link rel="canonical" href="https://blog.nullkey.top/tags/">
+<link rel="canonical" href="https://blog.nullkey.top/tags/ann/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.f49d66caae9ea0fd43f21f29e71a8d3e284517ed770f2aa86fa012953ad3c9ef.css" integrity="sha256-9J1myq6eoP1D8h8p5xqNPihFF&#43;13Dyqob6ASlTrTye8=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://blog.nullkey.top/images/logo.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://blog.nullkey.top/images/logo.jpg">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="https://blog.nullkey.top/images/logo.jpg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://blog.nullkey.top/tags/index.xml">
-<link rel="alternate" hreflang="en" href="https://blog.nullkey.top/tags/">
+<link rel="alternate" type="application/rss+xml" href="https://blog.nullkey.top/tags/ann/index.xml">
+<link rel="alternate" hreflang="en" href="https://blog.nullkey.top/tags/ann/">
 <noscript>
     <style>
         #theme-toggle,
@@ -56,14 +56,14 @@
         }
 
     </style>
-</noscript><meta property="og:url" content="https://blog.nullkey.top/tags/">
+</noscript><meta property="og:url" content="https://blog.nullkey.top/tags/ann/">
   <meta property="og:site_name" content="NULLKEY">
-  <meta property="og:title" content="Tags">
+  <meta property="og:title" content="ANN">
   <meta property="og:description" content="nullkey&#39;s blog">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tags">
+<meta name="twitter:title" content="ANN">
 <meta name="twitter:description" content="nullkey&#39;s blog">
 
 </head>
@@ -120,7 +120,7 @@
             </li>
             <li>
                 <a href="https://blog.nullkey.top/tags/" title="Tags">
-                    <span class="active">Tags</span>
+                    <span>Tags</span>
                 </a>
             </li>
             <li>
@@ -131,37 +131,41 @@
         </ul>
     </nav>
 </header>
-<main class="main">
-<header class="page-header">
-    <h1>Tags</h1>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="https://blog.nullkey.top/">Home</a>&nbsp;»&nbsp;<a href="https://blog.nullkey.top/tags/">Tags</a></div>
+  <h1>
+    ANN
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="https://blog.nullkey.top/tags/ai/">AI <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/ann/">ANN <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/blog/">blog <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/hugo/">hugo <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/personal/">personal <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/rag/">RAG <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/vector-database/">Vector Database <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="https://blog.nullkey.top/tags/web-development/">web development <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">RAG
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>幻觉 Hallucination AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
+检索增强生成 RAG RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：
+减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 ![RAG flow chart](/images/my_image.jpg) 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
+嵌入模型 Embedding Model 一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large
+向量嵌入 Vector Embedding 是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象
+向量数据库 Vector Database 存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等
+向量数据主要是由非结构化数据（Un-Structured Data）（如文本、视频、音频等，占全球数据80%）通过嵌入模型（Embedding Model）转换为向量嵌入，结构化数据（Structured Data）则以表格形式存在，如传统的数据库，存储明确的数据类型
+检索 Retrieve 本质上是在向量空间中寻找与查询向量最相似（相邻）的邻居
+最常用的度量指标：
+欧氏距离（Euclidean Distance）两点之间的直线距离
+余弦相似度（Cosine Similarity）非零向量的夹角的余弦值，常用于基于文本的数据
+点积相似度(Dot Product Similarity) 两个向量的模长以及夹角余弦值的乘积
+找出Top K chunks ,然后在此基础上重新排序 Re-ranking，更准确地挑选最合适的片段
+提示词模版 将提示词模版与检索得到的context以及用户问题组合构建，输入给LLM,得到最终的输出结果返回给用户
+这些context通过向量搜索从知识库中检索出来的，然后经过解码/转化后形成自然语言文本
+如何找到最近邻 暴力搜索 Brute force search 穷举所有数据点
+近似最近邻算法 ANN (Approximate Nearest Neighbor search) 核心思想，通过权衡精度与效率，牺牲少量精度，来显著提升搜索速度。构建专门的索引结构（Index），优化搜索路径，有效缩减搜索空间，实现快速检索
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-04-24 22:47:48 +0800 CST'>2025-04-24</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;nullkey</footer>
+  <a class="entry-link" aria-label="post link to RAG" href="https://blog.nullkey.top/posts/rag/"></a>
+</article>
     </main>
     
 <footer class="footer">
