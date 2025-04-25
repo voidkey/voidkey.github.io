@@ -146,7 +146,7 @@
   <div class="entry-content">
     <p>幻觉 Hallucination AI生成内容会出现幻觉（Hallucination）问题，主要因素一是LLM的概率生成机制，预测下一个词，可能会引致生成与事实不符的内容；二是训练数据有限，回答无法掌握更多私有的知识与最新的信息。
 检索增强生成 RAG RAG（Retrieval-Augmented Generation）则是为了更好的解决幻觉问题，提升模型的输出质量。有以下优势：
-减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 ![RAG flow chart](/images/rag.png) 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
+减少幻觉 提供当前时间的信息与特定领域的信息 与模型微调（fine-tuning）每次预训练静态数据相比，更有效率与性价比 RAG 流程图 文本分块 Text Split 将知识库的各种文件、数据分割成 Text Chunk，分割的好坏影响RAG的效果
 嵌入模型 Embedding Model 一种机器学习模型，可以将高维输入数据（如文本、图像）转换为低维向量，这些低维向量捕捉了文本的语义信息，有多种模型可以生成向量嵌入，如OpenAI的text-embedding-3-large
 向量嵌入 Vector Embedding 是将数据以数值向量的形式来进行表示，可以让ML算法能更轻松地对数据进行处理和解读，以数值形式捕捉对象间的语义关系，这些数值可以表示对象的特征。可以通过向量搜索或相似性搜索（Similarity Search）在向量空间中查找相似对象
 向量数据库 Vector Database 存储Vector Embedding等海量的高维向量，主要用于处理与相似性搜索有关的任务。主流厂商有Pinecone/ milvus/ Chroma/ Redis等
